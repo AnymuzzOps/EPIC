@@ -3,7 +3,7 @@ import type { HeroStats } from '../types/GameTypes';
 export const HEROES: Record<string, HeroStats> = {
   guardian: {
     key: 'guardian',
-    name: 'Guardian',
+    name: 'Campeón del Olimpo',
     maxHp: 350,
     damage: 25,
     speed: 28,

@@ -3,7 +3,7 @@ import type { AbilityConfig } from '../types/GameTypes';
 export const ABILITIES: Record<string, AbilityConfig> = {
   arcaneBlast: {
     key: 'arcaneBlast',
-    name: 'Arcane Blast',
+    name: 'Rayo de Zeus',
     cost: 40,
     cooldown: 12,
     damage: 60,
