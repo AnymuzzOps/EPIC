@@ -31,7 +31,7 @@ export class Base extends Phaser.GameObjects.Container {
   }
 
   receiveDamage(amount: number): void {
-    if (this.isDestroyed() || amount <= 0) {
+    if (this.isDefeated() || amount <= 0) {
       return;
     }
 
@@ -39,7 +39,7 @@ export class Base extends Phaser.GameObjects.Container {
     this.refreshHealthBar();
   }
 
-  isDestroyed(): boolean {
+  isDefeated(): boolean {
     return this.hp <= 0 || !this.active;
   }
 

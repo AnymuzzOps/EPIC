@@ -162,7 +162,7 @@ export class GameScene extends Phaser.Scene {
     this.showArcaneBlastEffect(center.x, center.y, ability.area);
 
     for (const enemy of [...this.enemyUnits]) {
-      if (!enemy.active || enemy.isDestroyed()) {
+      if (!enemy.active || enemy.isDefeated()) {
         continue;
       }
 
@@ -176,7 +176,7 @@ export class GameScene extends Phaser.Scene {
   }
 
   private findArcaneBlastCenter(): { x: number; y: number } {
-    const livingEnemies = this.enemyUnits.filter((unit) => unit.active && !unit.isDestroyed());
+    const livingEnemies = this.enemyUnits.filter((unit) => unit.active && !unit.isDefeated());
 
     if (livingEnemies.length === 0) {
       return { x: this.enemyBase.x, y: this.enemyBase.y };
@@ -198,12 +198,12 @@ export class GameScene extends Phaser.Scene {
   }
 
   private checkEndConditions(): void {
-    if (this.enemyBase.isDestroyed()) {
+    if (this.enemyBase.isDefeated()) {
       this.finishBattle(true);
       return;
     }
 
-    if (this.playerBase.isDestroyed()) {
+    if (this.playerBase.isDefeated()) {
       this.finishBattle(false);
     }
   }
