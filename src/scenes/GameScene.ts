@@ -48,6 +48,7 @@ export class GameScene extends Phaser.Scene {
   }
 
   create(): void {
+    console.log('[EPIC] GameScene.create: rendering battle scene');
     this.resetState();
     this.drawBattlefield();
     this.createBasesAndSystems();
