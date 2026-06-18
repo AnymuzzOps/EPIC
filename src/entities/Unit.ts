@@ -4,7 +4,7 @@ import { GROUND_Y } from '../utils/constants';
 import { Projectile } from './Projectile';
 import { createGreekUnitVisual, updateGreekUnitVisual } from '../visuals/GreekUnitVisualFactory';
 
-const HEALTH_BAR_WIDTH = 52;
+const HEALTH_BAR_WIDTH = 56;
 const BASE_RANGE_PADDING = 24;
 
 export class Unit extends Phaser.GameObjects.Container implements Damageable {
@@ -27,9 +27,9 @@ export class Unit extends Phaser.GameObjects.Container implements Damageable {
     this.hp = stats.maxHp;
 
     this.visual = createGreekUnitVisual(scene, stats, faction);
-    const healthBack = scene.add.rectangle(0, -48, HEALTH_BAR_WIDTH + 2, 8, 0x1c1410).setStrokeStyle(1, 0xf2c94c);
-    this.healthBar = scene.add.rectangle(-HEALTH_BAR_WIDTH / 2, -48, HEALTH_BAR_WIDTH, 6, 0x2ecc71).setOrigin(0, 0.5);
-    const namePlate = scene.add.text(0, 38, stats.name, { fontSize: '10px', color: '#f7ead0' }).setOrigin(0.5);
+    const healthBack = scene.add.rectangle(0, -62, HEALTH_BAR_WIDTH + 2, 8, 0x2b2117).setStrokeStyle(1, 0xf2c94c);
+    this.healthBar = scene.add.rectangle(-HEALTH_BAR_WIDTH / 2, -62, HEALTH_BAR_WIDTH, 6, 0x2ecc71).setOrigin(0, 0.5);
+    const namePlate = scene.add.text(0, 30, stats.name, { fontSize: '10px', color: '#f7ead0' }).setOrigin(0.5);
 
     this.add([this.visual, healthBack, this.healthBar, namePlate]);
     scene.add.existing(this);

@@ -1,1 +1,18 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 220"><path d="M20 190h180v18H20zM35 165h150v25H35z" fill="#8b7a65"/><path d="M15 72h190L110 18z" fill="#2d6cdf" stroke="#f2c94c" stroke-width="6"/><rect x="37" y="77" width="146" height="20" fill="#f2c94c" stroke="#47351b" stroke-width="4"/><g fill="#d8e6f5" stroke="#8b7a65" stroke-width="4"><rect x="44" y="96" width="22" height="72" rx="7"/><rect x="82" y="96" width="22" height="72" rx="7"/><rect x="120" y="96" width="22" height="72" rx="7"/><rect x="158" y="96" width="22" height="72" rx="7"/></g><path d="M91 168v-50c0-20 38-20 38 0v50z" fill="#172c4b" stroke="#f2c94c" stroke-width="5"/><circle cx="63" cy="61" r="9" fill="#8fb3ff"/><circle cx="157" cy="61" r="9" fill="#8fb3ff"/><path d="M55 54l8-18 8 18M149 54l8-18 8 18" fill="#f2c94c"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 220">
+  <ellipse cx="110" cy="207" rx="88" ry="8" fill="#24180f" opacity="0.16"/>
+  <path d="M24 190 H196 V207 H24 Z M40 168 H180 V190 H40 Z M54 150 H166 V168 H54 Z" fill="#8b7a65" stroke="#4c3d2c" stroke-width="3"/>
+  <path d="M16 78 L110 20 L204 78 Z" fill="#2d6cdf" stroke="#f2c94c" stroke-width="6"/>
+  <path d="M48 72 L110 36 L172 72" fill="none" stroke="#d8e6f5" stroke-width="4" opacity="0.65"/>
+  <rect x="35" y="79" width="150" height="21" rx="2" fill="#f2c94c" stroke="#47351b" stroke-width="4"/>
+  <g fill="#d8e6f5" stroke="#7f735e" stroke-width="4">
+    <rect x="45" y="99" width="21" height="72" rx="8"/>
+    <rect x="83" y="99" width="21" height="72" rx="8"/>
+    <rect x="121" y="99" width="21" height="72" rx="8"/>
+    <rect x="159" y="99" width="21" height="72" rx="8"/>
+  </g>
+  <path d="M91 171 V124 C91 104 129 104 129 124 V171 Z" fill="#172c4b" stroke="#f2c94c" stroke-width="5"/>
+  <circle cx="110" cy="66" r="11" fill="#8fb3ff" stroke="#f2c94c" stroke-width="3"/>
+  <path d="M59 61 L66 43 L75 61 M145 61 L154 43 L162 61" fill="#f2c94c" stroke="#7d5520" stroke-width="2"/>
+  <circle cx="67" cy="64" r="8" fill="#8fb3ff" opacity="0.85"/>
+  <circle cx="154" cy="64" r="8" fill="#8fb3ff" opacity="0.85"/>
+</svg>

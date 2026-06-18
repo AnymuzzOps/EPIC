@@ -6,16 +6,16 @@ export class BootScene extends Phaser.Scene {
   }
 
   preload(): void {
-    this.load.svg('unit-hoplita', 'assets/units/hoplita.svg');
-    this.load.svg('unit-arquero-delfos', 'assets/units/arquero-delfos.svg');
-    this.load.svg('unit-guardian-esparta', 'assets/units/guardian-esparta.svg');
-    this.load.svg('unit-oraculo-arcano', 'assets/units/oraculo-arcano.svg');
-    this.load.svg('unit-campeon-olimpo', 'assets/units/campeon-olimpo.svg');
-    this.load.svg('building-santuario-olimpo', 'assets/buildings/santuario-olimpo.svg');
-    this.load.svg('building-templo-ares', 'assets/buildings/templo-ares.svg');
-    this.load.svg('projectile-flecha', 'assets/projectiles/flecha.svg');
-    this.load.svg('projectile-orbe-magico', 'assets/projectiles/orbe-magico.svg');
-    this.load.svg('effect-rayo-zeus', 'assets/effects/rayo-zeus.svg');
+    this.load.image('unit-hoplita', 'assets/units/hoplita.svg');
+    this.load.image('unit-arquero-delfos', 'assets/units/arquero-delfos.svg');
+    this.load.image('unit-guardian-esparta', 'assets/units/guardian-esparta.svg');
+    this.load.image('unit-oraculo-arcano', 'assets/units/oraculo-arcano.svg');
+    this.load.image('unit-campeon-olimpo', 'assets/units/campeon-olimpo.svg');
+    this.load.image('building-santuario-olimpo', 'assets/buildings/santuario-olimpo.svg');
+    this.load.image('building-templo-ares', 'assets/buildings/templo-ares.svg');
+    this.load.image('projectile-flecha', 'assets/projectiles/flecha.svg');
+    this.load.image('projectile-orbe-magico', 'assets/projectiles/orbe-magico.svg');
+    this.load.image('effect-rayo-zeus', 'assets/effects/rayo-zeus.svg');
   }
 
   create(): void {

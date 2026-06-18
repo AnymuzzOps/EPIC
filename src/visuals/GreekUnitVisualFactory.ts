@@ -14,9 +14,8 @@ export function createGreekUnitVisual(scene: Phaser.Scene, stats: UnitStats, fac
   const visual = scene.add.container(0, 0);
   const sprite = scene.add.image(0, 0, textureKey).setOrigin(0.5, 0.78);
 
-  sprite.setDisplaySize(stats.key === 'guardian' ? 70 : stats.key === 'tank' ? 58 : 50, stats.key === 'guardian' ? 84 : 70);
+  sprite.setDisplaySize(stats.key === 'guardian' ? 82 : stats.key === 'tank' ? 70 : 62, stats.key === 'guardian' ? 112 : stats.key === 'tank' ? 92 : 82);
   sprite.setFlipX(faction === 'enemy');
-  sprite.setTint(faction === 'enemy' ? 0xffd6d6 : 0xffffff);
   visual.add(sprite);
 
   return visual;

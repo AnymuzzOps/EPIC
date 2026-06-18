@@ -207,7 +207,7 @@ export class GameScene extends Phaser.Scene {
   private showZeusLightningEffect(x: number, y: number, radius: number): void {
     const impact = this.add.circle(x, y, radius, 0x8fb3ff, 0.18).setStrokeStyle(4, 0xf2c94c).setDepth(25);
     const lightning = this.add.image(x, y - 92, 'effect-rayo-zeus').setDisplaySize(96, 165).setDepth(27);
-    const lightningGlow = this.add.image(x, y - 92, 'effect-rayo-zeus').setDisplaySize(128, 210).setAlpha(0.28).setTint(0x8fb3ff).setDepth(26);
+    const lightningGlow = this.add.image(x, y - 92, 'effect-rayo-zeus').setDisplaySize(128, 210).setAlpha(0.28).setDepth(26);
 
     for (let i = 0; i < 10; i += 1) {
       const spark = this.add

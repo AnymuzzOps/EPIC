@@ -24,10 +24,10 @@ export class Base extends Phaser.GameObjects.Container {
     const temple = scene.add
       .image(0, -5, isPlayer ? 'building-santuario-olimpo' : 'building-templo-ares')
       .setOrigin(0.5, 0.72)
-      .setDisplaySize(160, 160);
+      .setDisplaySize(190, 190);
 
     this.healthBar = scene.add.rectangle(-HEALTH_BAR_WIDTH / 2, -112, HEALTH_BAR_WIDTH, 14, 0x2ecc71).setOrigin(0, 0.5);
-    const healthBack = scene.add.rectangle(0, -112, HEALTH_BAR_WIDTH + 4, 18, 0x1c1410).setStrokeStyle(2, gold);
+    const healthBack = scene.add.rectangle(0, -112, HEALTH_BAR_WIDTH + 4, 18, 0x2b2117).setStrokeStyle(2, gold);
     this.healthLabel = scene.add.text(0, -139, `${name}\n${this.getHealthText()}`, {
       fontSize: '14px',
       color: '#ffffff',
