@@ -35,7 +35,7 @@ export class Unit extends Phaser.GameObjects.Container implements Damageable {
   }
 
   update(deltaSeconds: number, enemies: Damageable[], enemyBase: Damageable, projectiles: Projectile[]): void {
-    if (this.state === 'dead' || this.isDestroyed()) {
+    if (this.state === 'dead' || this.isDefeated()) {
       return;
     }
 
@@ -53,7 +53,7 @@ export class Unit extends Phaser.GameObjects.Container implements Damageable {
   }
 
   receiveDamage(amount: number): void {
-    if (this.isDestroyed() || amount <= 0) {
+    if (this.isDefeated() || amount <= 0) {
       return;
     }
 
@@ -66,12 +66,12 @@ export class Unit extends Phaser.GameObjects.Container implements Damageable {
     }
   }
 
-  isDestroyed(): boolean {
+  isDefeated(): boolean {
     return this.hp <= 0 || !this.active;
   }
 
   protected pickTarget(enemies: Damageable[], enemyBase: Damageable): Damageable | undefined {
-    const livingEnemies = enemies.filter((enemy) => enemy.active && !enemy.isDestroyed());
+    const livingEnemies = enemies.filter((enemy) => enemy.active && !enemy.isDefeated());
     const candidates = [...livingEnemies, enemyBase].filter((enemy) => this.isTargetInRange(enemy));
 
     candidates.sort((a, b) => this.distanceTo(a) - this.distanceTo(b));
@@ -79,7 +79,7 @@ export class Unit extends Phaser.GameObjects.Container implements Damageable {
   }
 
   protected attack(target: Damageable, projectiles: Projectile[]): void {
-    if (this.attackTimer > 0 || !target.active || target.isDestroyed()) {
+    if (this.attackTimer > 0 || !target.active || target.isDefeated()) {
       return;
     }
 
