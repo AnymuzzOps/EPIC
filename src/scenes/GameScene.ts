@@ -206,13 +206,13 @@ export class GameScene extends Phaser.Scene {
 
   private showZeusLightningEffect(x: number, y: number, radius: number): void {
     const impact = this.add.circle(x, y, radius, 0x8fb3ff, 0.18).setStrokeStyle(4, 0xf2c94c).setDepth(25);
-    const bolt = this.add.line(x, y - 170, 0, -100, 26, -28, 0xf7f7ff).setLineWidth(7).setDepth(26);
-    const boltGlow = this.add.line(x, y - 170, 0, -100, 26, -28, 0x8fb3ff).setLineWidth(13).setAlpha(0.35).setDepth(25);
+    const lightning = this.add.image(x, y - 92, 'effect-rayo-zeus').setDisplaySize(96, 165).setDepth(27);
+    const lightningGlow = this.add.image(x, y - 92, 'effect-rayo-zeus').setDisplaySize(128, 210).setAlpha(0.28).setTint(0x8fb3ff).setDepth(26);
 
     for (let i = 0; i < 10; i += 1) {
       const spark = this.add
         .circle(x + Phaser.Math.Between(-radius, radius), y + Phaser.Math.Between(-40, 40), 3, 0xf2c94c, 0.9)
-        .setDepth(26);
+        .setDepth(28);
       this.tweens.add({
         targets: spark,
         alpha: 0,
@@ -223,14 +223,14 @@ export class GameScene extends Phaser.Scene {
     }
 
     this.tweens.add({
-      targets: [impact, bolt, boltGlow],
+      targets: [impact, lightning, lightningGlow],
       alpha: 0,
-      scale: 1.18,
-      duration: 360,
+      scale: 1.14,
+      duration: 380,
       onComplete: () => {
         impact.destroy();
-        bolt.destroy();
-        boltGlow.destroy();
+        lightning.destroy();
+        lightningGlow.destroy();
       },
     });
   }

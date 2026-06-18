@@ -9,8 +9,7 @@ export class Projectile extends Phaser.GameObjects.Container {
   speed: number;
   faction: Faction;
 
-  private projectileShape: Phaser.GameObjects.Shape;
-  private trail?: Phaser.GameObjects.Shape;
+  private sprite: Phaser.GameObjects.Image;
 
   constructor(
     scene: Phaser.Scene,
@@ -18,7 +17,7 @@ export class Projectile extends Phaser.GameObjects.Container {
     y: number,
     target: Damageable,
     damage: number,
-    color: number,
+    _color: number,
     faction: Faction,
     attackType: AttackType = 'ranged',
     speed = 330,
@@ -30,16 +29,11 @@ export class Projectile extends Phaser.GameObjects.Container {
     this.speed = speed;
     this.faction = faction;
 
-    const direction = faction === 'player' ? 1 : -1;
-    if (attackType === 'ranged') {
-      this.projectileShape = scene.add.line(0, 0, -12 * direction, 0, 14 * direction, 0, color).setLineWidth(3);
-      this.trail = scene.add.triangle(-18 * direction, 0, -5 * direction, -5, -5 * direction, 5, -15 * direction, 0, 0xf4e6bd, 0.9);
-      this.add([this.projectileShape, this.trail]);
-    } else {
-      this.trail = scene.add.circle(-9 * direction, 0, 8, color, 0.25);
-      this.projectileShape = scene.add.circle(0, 0, 7, color, 0.95).setStrokeStyle(2, 0xf2c94c);
-      this.add([this.trail, this.projectileShape]);
-    }
+    const texture = attackType === 'ranged' ? 'projectile-flecha' : 'projectile-orbe-magico';
+    this.sprite = scene.add.image(0, 0, texture).setOrigin(0.5);
+    this.sprite.setDisplaySize(attackType === 'ranged' ? 48 : 28, attackType === 'ranged' ? 12 : 28);
+    this.sprite.setFlipX(faction === 'enemy');
+    this.add(this.sprite);
 
     scene.add.existing(this);
   }

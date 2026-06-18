@@ -19,21 +19,13 @@ export class Base extends Phaser.GameObjects.Container {
     this.hp = maxHp;
 
     const isPlayer = faction === 'player';
-    const marble = isPlayer ? 0xd8e6f5 : 0x5a4a4a;
-    const accent = isPlayer ? 0x2d6cdf : 0x9b2d2d;
-    const gold = isPlayer ? 0xf2c94c : 0xff6b3a;
     const name = isPlayer ? 'Santuario del Olimpo' : 'Templo de Ares';
+    const gold = isPlayer ? 0xf2c94c : 0xff6b3a;
+    const temple = scene.add
+      .image(0, -5, isPlayer ? 'building-santuario-olimpo' : 'building-templo-ares')
+      .setOrigin(0.5, 0.72)
+      .setDisplaySize(160, 160);
 
-    const platform = scene.add.rectangle(0, 58, 132, 18, 0x6d5a42).setStrokeStyle(2, 0x2d2217);
-    const roof = scene.add.triangle(0, -74, -76, 28, 76, 28, 0, -38, accent).setStrokeStyle(3, gold);
-    const frieze = scene.add.rectangle(0, -42, 132, 18, gold).setStrokeStyle(2, 0x47351b);
-    const door = scene.add.rectangle(0, 22, 34, 74, isPlayer ? 0x172c4b : 0x281313).setStrokeStyle(2, gold);
-    const columns = [-45, -18, 18, 45].map((cx) => scene.add.rectangle(cx, 10, 16, 92, marble).setStrokeStyle(2, 0x8b7a65));
-    const flameColor = isPlayer ? 0x8fb3ff : 0xff3b2f;
-    const flames = [
-      scene.add.circle(-60, -16, 7, flameColor, 0.75),
-      scene.add.circle(60, -16, 7, flameColor, 0.75),
-    ];
     this.healthBar = scene.add.rectangle(-HEALTH_BAR_WIDTH / 2, -112, HEALTH_BAR_WIDTH, 14, 0x2ecc71).setOrigin(0, 0.5);
     const healthBack = scene.add.rectangle(0, -112, HEALTH_BAR_WIDTH + 4, 18, 0x1c1410).setStrokeStyle(2, gold);
     this.healthLabel = scene.add.text(0, -139, `${name}\n${this.getHealthText()}`, {
@@ -42,7 +34,7 @@ export class Base extends Phaser.GameObjects.Container {
       align: 'center',
     }).setOrigin(0.5);
 
-    this.add([platform, roof, frieze, door, ...columns, ...flames, healthBack, this.healthBar, this.healthLabel]);
+    this.add([temple, healthBack, this.healthBar, this.healthLabel]);
     scene.add.existing(this);
   }
 
