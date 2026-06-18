@@ -1,9 +1,7 @@
 import Phaser from 'phaser';
 import type { Faction } from '../types/GameTypes';
 
-const BASE_WIDTH = 86;
-const BASE_HEIGHT = 180;
-const HEALTH_BAR_WIDTH = 112;
+const HEALTH_BAR_WIDTH = 132;
 
 export class Base extends Phaser.GameObjects.Container {
   faction: Faction;
@@ -20,18 +18,28 @@ export class Base extends Phaser.GameObjects.Container {
     this.maxHp = maxHp;
     this.hp = maxHp;
 
-    const color = faction === 'player' ? 0x2d6cdf : 0xc0392b;
-    const baseBody = scene.add.rectangle(0, 0, BASE_WIDTH, BASE_HEIGHT, color).setStrokeStyle(3, 0xffffff);
-    const healthBack = scene.add.rectangle(0, -110, HEALTH_BAR_WIDTH, 14, 0x2b1515);
-    this.healthBar = scene.add.rectangle(-HEALTH_BAR_WIDTH / 2, -110, HEALTH_BAR_WIDTH, 14, 0x2ecc71).setOrigin(0, 0.5);
-    this.healthLabel = scene.add.text(0, -140, this.getHealthText(), { fontSize: '16px', color: '#ffffff' }).setOrigin(0.5);
+    const isPlayer = faction === 'player';
+    const name = isPlayer ? 'Santuario del Olimpo' : 'Templo de Ares';
+    const gold = isPlayer ? 0xf2c94c : 0xff6b3a;
+    const temple = scene.add
+      .image(0, -5, isPlayer ? 'building-santuario-olimpo' : 'building-templo-ares')
+      .setOrigin(0.5, 0.72)
+      .setDisplaySize(190, 190);
 
-    this.add([baseBody, healthBack, this.healthBar, this.healthLabel]);
+    this.healthBar = scene.add.rectangle(-HEALTH_BAR_WIDTH / 2, -112, HEALTH_BAR_WIDTH, 14, 0x2ecc71).setOrigin(0, 0.5);
+    const healthBack = scene.add.rectangle(0, -112, HEALTH_BAR_WIDTH + 4, 18, 0x2b2117).setStrokeStyle(2, gold);
+    this.healthLabel = scene.add.text(0, -139, `${name}\n${this.getHealthText()}`, {
+      fontSize: '14px',
+      color: '#ffffff',
+      align: 'center',
+    }).setOrigin(0.5);
+
+    this.add([temple, healthBack, this.healthBar, this.healthLabel]);
     scene.add.existing(this);
   }
 
   receiveDamage(amount: number): void {
-    if (this.isDestroyed() || amount <= 0) {
+    if (this.isDefeated() || amount <= 0) {
       return;
     }
 
@@ -39,7 +47,7 @@ export class Base extends Phaser.GameObjects.Container {
     this.refreshHealthBar();
   }
 
-  isDestroyed(): boolean {
+  isDefeated(): boolean {
     return this.hp <= 0 || !this.active;
   }
 
@@ -47,7 +55,8 @@ export class Base extends Phaser.GameObjects.Container {
     const ratio = Phaser.Math.Clamp(this.hp / this.maxHp, 0, 1);
     this.healthBar.width = HEALTH_BAR_WIDTH * ratio;
     this.healthBar.fillColor = ratio < 0.3 ? 0xe74c3c : 0x2ecc71;
-    this.healthLabel.setText(this.getHealthText());
+    const name = this.faction === 'player' ? 'Santuario del Olimpo' : 'Templo de Ares';
+    this.healthLabel.setText(`${name}\n${this.getHealthText()}`);
   }
 
   private getHealthText(): string {

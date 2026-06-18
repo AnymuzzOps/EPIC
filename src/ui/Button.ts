@@ -1,3 +1,5 @@
+import Phaser from 'phaser';
+
 export class Button extends Phaser.GameObjects.Container {
   private background: Phaser.GameObjects.Rectangle;
   private label: Phaser.GameObjects.Text;
@@ -13,8 +15,10 @@ export class Button extends Phaser.GameObjects.Container {
   ) {
     super(scene, x, y);
 
-    this.background = scene.add.rectangle(0, 0, width, height, 0x26364f).setStrokeStyle(2, 0x8fb3ff);
-    this.label = scene.add.text(0, 0, text, { fontSize: '17px', color: '#ffffff', align: 'center' }).setOrigin(0.5);
+    this.background = scene.add.rectangle(0, 0, width, height, 0x26364f).setStrokeStyle(3, 0xf2c94c);
+    this.label = scene.add
+      .text(0, 0, text, { fontSize: '17px', color: '#ffffff', align: 'center', stroke: '#111827', strokeThickness: 3 })
+      .setOrigin(0.5);
 
     this.add([this.background, this.label]);
     this.setSize(width, height)

@@ -49,5 +49,5 @@ export interface Damageable {
   y: number;
   faction: Faction;
   receiveDamage(amount: number): void;
-  isDestroyed(): boolean;
+  isDefeated(): boolean;
 }

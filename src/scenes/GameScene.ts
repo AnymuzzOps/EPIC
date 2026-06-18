@@ -48,6 +48,7 @@ export class GameScene extends Phaser.Scene {
   }
 
   create(): void {
+    console.log('[EPIC] GameScene.create: rendering battle scene');
     this.resetState();
     this.drawBattlefield();
     this.createBasesAndSystems();
@@ -85,10 +86,27 @@ export class GameScene extends Phaser.Scene {
   }
 
   private drawBattlefield(): void {
-    this.add.rectangle(GAME_WIDTH / 2, GAME_HEIGHT / 2, GAME_WIDTH, GAME_HEIGHT, 0x162033);
-    this.add.rectangle(GAME_WIDTH / 2, GROUND_Y + 34, GAME_WIDTH, 90, 0x33402f);
-    this.add.line(GAME_WIDTH / 2, GROUND_Y - 8, 0, 0, GAME_WIDTH, 0, 0x87a96b).setLineWidth(4);
-    this.add.text(640, 92, 'Arkaius Battlefield', { fontSize: '18px', color: '#8fb3ff' }).setOrigin(0.5);
+    this.add.rectangle(GAME_WIDTH / 2, GAME_HEIGHT / 2, GAME_WIDTH, GAME_HEIGHT, 0x1c2744);
+    this.add.circle(1040, 95, 58, 0xf2c94c, 0.22);
+    this.add.circle(1040, 95, 38, 0xfff2b0, 0.16);
+
+    [0, 1, 2].forEach((layer) => {
+      const color = [0x27395d, 0x33466c, 0x42536f][layer];
+      const y = 290 + layer * 42;
+      this.add.triangle(320 + layer * 240, y, -80, 170, 220, -55, 540, 170, color, 0.9 - layer * 0.16);
+      this.add.triangle(820 + layer * 170, y + 10, -80, 170, 190, -65, 500, 170, color, 0.82 - layer * 0.14);
+    });
+
+    for (let i = 0; i < 7; i += 1) {
+      const x = 130 + i * 170;
+      this.add.rectangle(x, 392, 18, 92, 0xb7aa8a, 0.32).setStrokeStyle(1, 0xd8caa1, 0.35);
+      this.add.rectangle(x, 343, 42, 10, 0xb7aa8a, 0.3);
+    }
+
+    this.add.rectangle(GAME_WIDTH / 2, GROUND_Y + 34, GAME_WIDTH, 90, 0x5e5039);
+    this.add.rectangle(GAME_WIDTH / 2, GROUND_Y + 82, GAME_WIDTH, 28, 0x3f3022);
+    this.add.line(GAME_WIDTH / 2, GROUND_Y - 8, 0, 0, GAME_WIDTH, 0, 0xf2c94c, 0.9).setLineWidth(4);
+    this.add.text(640, 92, 'Campo de batalla del Olimpo', { fontSize: '20px', color: '#f7ead0' }).setOrigin(0.5);
   }
 
   private createBasesAndSystems(): void {
@@ -109,11 +127,11 @@ export class GameScene extends Phaser.Scene {
 
     PLAYER_UNIT_KEYS.forEach((key, index) => {
       const unit = UNIT_DEFINITIONS[key];
-      this.hud.addButton(key, `${index + 1} ${unit.name}\n${unit.cost} EN`, 120 + index * 165, () => this.spawnPlayerUnit(key));
+      this.hud.addButton(key, `${index + 1} ${unit.name}\n${unit.cost} favor`, 120 + index * 165, () => this.spawnPlayerUnit(key));
     });
 
     const blast = ABILITIES.arcaneBlast;
-    this.hud.addButton('blast', `Q ${blast.name}\n${blast.cost} EN`, 845, () => this.castArcaneBlast());
+    this.hud.addButton('blast', `Q ${blast.name}\n${blast.cost} favor`, 845, () => this.castArcaneBlast());
     new Button(this, 1135, 665, 150, 54, 'Menú', () => this.scene.start('MenuScene')).setDepth(20);
 
     this.input.keyboard?.on('keydown-ONE', () => this.spawnPlayerUnit('soldier'));
@@ -159,10 +177,10 @@ export class GameScene extends Phaser.Scene {
 
     this.abilityCooldown = ability.cooldown;
     const center = this.findArcaneBlastCenter();
-    this.showArcaneBlastEffect(center.x, center.y, ability.area);
+    this.showZeusLightningEffect(center.x, center.y, ability.area);
 
     for (const enemy of [...this.enemyUnits]) {
-      if (!enemy.active || enemy.isDestroyed()) {
+      if (!enemy.active || enemy.isDefeated()) {
         continue;
       }
 
@@ -176,7 +194,7 @@ export class GameScene extends Phaser.Scene {
   }
 
   private findArcaneBlastCenter(): { x: number; y: number } {
-    const livingEnemies = this.enemyUnits.filter((unit) => unit.active && !unit.isDestroyed());
+    const livingEnemies = this.enemyUnits.filter((unit) => unit.active && !unit.isDefeated());
 
     if (livingEnemies.length === 0) {
       return { x: this.enemyBase.x, y: this.enemyBase.y };
@@ -186,24 +204,44 @@ export class GameScene extends Phaser.Scene {
     return { x: livingEnemies[0].x, y: livingEnemies[0].y };
   }
 
-  private showArcaneBlastEffect(x: number, y: number, radius: number): void {
-    const effect = this.add.circle(x, y, radius, 0x9b51e0, 0.22).setStrokeStyle(3, 0xd7a6ff).setDepth(10);
+  private showZeusLightningEffect(x: number, y: number, radius: number): void {
+    const impact = this.add.circle(x, y, radius, 0x8fb3ff, 0.18).setStrokeStyle(4, 0xf2c94c).setDepth(25);
+    const lightning = this.add.image(x, y - 92, 'effect-rayo-zeus').setDisplaySize(96, 165).setDepth(27);
+    const lightningGlow = this.add.image(x, y - 92, 'effect-rayo-zeus').setDisplaySize(128, 210).setAlpha(0.28).setDepth(26);
+
+    for (let i = 0; i < 10; i += 1) {
+      const spark = this.add
+        .circle(x + Phaser.Math.Between(-radius, radius), y + Phaser.Math.Between(-40, 40), 3, 0xf2c94c, 0.9)
+        .setDepth(28);
+      this.tweens.add({
+        targets: spark,
+        alpha: 0,
+        y: spark.y - Phaser.Math.Between(20, 55),
+        duration: 360,
+        onComplete: () => spark.destroy(),
+      });
+    }
+
     this.tweens.add({
-      targets: effect,
+      targets: [impact, lightning, lightningGlow],
       alpha: 0,
-      scale: 1.15,
-      duration: 280,
-      onComplete: () => effect.destroy(),
+      scale: 1.14,
+      duration: 380,
+      onComplete: () => {
+        impact.destroy();
+        lightning.destroy();
+        lightningGlow.destroy();
+      },
     });
   }
 
   private checkEndConditions(): void {
-    if (this.enemyBase.isDestroyed()) {
+    if (this.enemyBase.isDefeated()) {
       this.finishBattle(true);
       return;
     }
 
-    if (this.playerBase.isDestroyed()) {
+    if (this.playerBase.isDefeated()) {
       this.finishBattle(false);
     }
   }
@@ -217,9 +255,9 @@ export class GameScene extends Phaser.Scene {
 
     if (victory) {
       this.coins = addCoins(LEVELS[0].rewardCoins);
-      this.hud.message.setText(`¡VICTORIA!\n+${LEVELS[0].rewardCoins} monedas`);
+      this.hud.message.setText(`¡Victoria del Olimpo!\nHas obtenido ${LEVELS[0].rewardCoins} monedas`);
     } else {
-      this.hud.message.setText('DERROTA');
+      this.hud.message.setText('El santuario ha caído');
     }
 
     new Button(this, 540, 390, 200, 60, victory ? 'Volver al menú' : 'Reintentar', () =>

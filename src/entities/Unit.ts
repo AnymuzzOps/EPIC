@@ -2,10 +2,9 @@ import Phaser from 'phaser';
 import type { Damageable, Faction, UnitState, UnitStats } from '../types/GameTypes';
 import { GROUND_Y } from '../utils/constants';
 import { Projectile } from './Projectile';
+import { createGreekUnitVisual, updateGreekUnitVisual } from '../visuals/GreekUnitVisualFactory';
 
-const UNIT_WIDTH = 34;
-const UNIT_HEIGHT = 46;
-const HEALTH_BAR_WIDTH = 42;
+const HEALTH_BAR_WIDTH = 56;
 const BASE_RANGE_PADDING = 24;
 
 export class Unit extends Phaser.GameObjects.Container implements Damageable {
@@ -16,7 +15,9 @@ export class Unit extends Phaser.GameObjects.Container implements Damageable {
   target?: Damageable;
 
   private healthBar: Phaser.GameObjects.Rectangle;
+  private visual: Phaser.GameObjects.Container;
   private attackTimer = 0;
+  private animationTime = 0;
 
   constructor(scene: Phaser.Scene, x: number, faction: Faction, stats: UnitStats) {
     super(scene, x, GROUND_Y - 30);
@@ -25,19 +26,22 @@ export class Unit extends Phaser.GameObjects.Container implements Damageable {
     this.stats = stats;
     this.hp = stats.maxHp;
 
-    const body = scene.add.rectangle(0, 0, UNIT_WIDTH, UNIT_HEIGHT, stats.color).setStrokeStyle(2, 0x111111);
-    const healthBack = scene.add.rectangle(0, -32, HEALTH_BAR_WIDTH + 2, 8, 0x111111);
-    this.healthBar = scene.add.rectangle(-HEALTH_BAR_WIDTH / 2, -32, HEALTH_BAR_WIDTH, 6, 0x2ecc71).setOrigin(0, 0.5);
-    const initial = scene.add.text(0, 31, stats.name[0], { fontSize: '14px', color: '#ffffff' }).setOrigin(0.5);
+    this.visual = createGreekUnitVisual(scene, stats, faction);
+    const healthBack = scene.add.rectangle(0, -62, HEALTH_BAR_WIDTH + 2, 8, 0x2b2117).setStrokeStyle(1, 0xf2c94c);
+    this.healthBar = scene.add.rectangle(-HEALTH_BAR_WIDTH / 2, -62, HEALTH_BAR_WIDTH, 6, 0x2ecc71).setOrigin(0, 0.5);
+    const namePlate = scene.add.text(0, 30, stats.name, { fontSize: '10px', color: '#f7ead0' }).setOrigin(0.5);
 
-    this.add([body, healthBack, this.healthBar, initial]);
+    this.add([this.visual, healthBack, this.healthBar, namePlate]);
     scene.add.existing(this);
   }
 
   update(deltaSeconds: number, enemies: Damageable[], enemyBase: Damageable, projectiles: Projectile[]): void {
-    if (this.state === 'dead' || this.isDestroyed()) {
+    if (this.state === 'dead' || this.isDefeated()) {
       return;
     }
+
+    this.animationTime += deltaSeconds;
+    updateGreekUnitVisual(this.visual, this.animationTime, this.state);
 
     this.attackTimer = Math.max(0, this.attackTimer - deltaSeconds);
     this.target = this.pickTarget(enemies, enemyBase);
@@ -53,7 +57,7 @@ export class Unit extends Phaser.GameObjects.Container implements Damageable {
   }
 
   receiveDamage(amount: number): void {
-    if (this.isDestroyed() || amount <= 0) {
+    if (this.isDefeated() || amount <= 0) {
       return;
     }
 
@@ -62,16 +66,24 @@ export class Unit extends Phaser.GameObjects.Container implements Damageable {
 
     if (this.hp <= 0) {
       this.state = 'dead';
-      this.destroy();
+      this.setActive(false);
+      this.scene.tweens.add({
+        targets: this,
+        alpha: 0,
+        angle: this.faction === 'player' ? -18 : 18,
+        scale: this.scale * 0.75,
+        duration: 260,
+        onComplete: () => this.destroy(),
+      });
     }
   }
 
-  isDestroyed(): boolean {
+  isDefeated(): boolean {
     return this.hp <= 0 || !this.active;
   }
 
   protected pickTarget(enemies: Damageable[], enemyBase: Damageable): Damageable | undefined {
-    const livingEnemies = enemies.filter((enemy) => enemy.active && !enemy.isDestroyed());
+    const livingEnemies = enemies.filter((enemy) => enemy.active && !enemy.isDefeated());
     const candidates = [...livingEnemies, enemyBase].filter((enemy) => this.isTargetInRange(enemy));
 
     candidates.sort((a, b) => this.distanceTo(a) - this.distanceTo(b));
@@ -79,14 +91,16 @@ export class Unit extends Phaser.GameObjects.Container implements Damageable {
   }
 
   protected attack(target: Damageable, projectiles: Projectile[]): void {
-    if (this.attackTimer > 0 || !target.active || target.isDestroyed()) {
+    if (this.attackTimer > 0 || !target.active || target.isDefeated()) {
       return;
     }
 
     this.attackTimer = this.stats.attackCooldown;
 
     if (this.stats.attackType === 'melee') {
+      this.playAttackMotion();
       target.receiveDamage(this.stats.damage);
+      this.showDamageText(target);
       return;
     }
 
@@ -99,8 +113,27 @@ export class Unit extends Phaser.GameObjects.Container implements Damageable {
         this.stats.damage,
         this.stats.projectileColor ?? 0xffffff,
         this.faction,
+        this.stats.attackType,
       ),
     );
+  }
+
+
+  private playAttackMotion(): void {
+    this.scene.tweens.add({
+      targets: this.visual,
+      x: this.getDirection() * 6,
+      yoyo: true,
+      duration: 90,
+    });
+  }
+
+  private showDamageText(target: Damageable): void {
+    const text = this.scene.add
+      .text(target.x, target.y - 58, `-${this.stats.damage}`, { fontSize: '16px', color: '#ffe08a' })
+      .setOrigin(0.5)
+      .setDepth(30);
+    this.scene.tweens.add({ targets: text, y: text.y - 24, alpha: 0, duration: 520, onComplete: () => text.destroy() });
   }
 
   private refreshHealthBar(): void {
