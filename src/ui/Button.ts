@@ -1,3 +1,4 @@
+import Phaser from 'phaser';
 export class Button extends Phaser.GameObjects.Container {
   private background: Phaser.GameObjects.Rectangle;
   private label: Phaser.GameObjects.Text;

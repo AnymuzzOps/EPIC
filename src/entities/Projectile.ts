@@ -34,7 +34,7 @@ export class Projectile extends Phaser.GameObjects.Arc {
       return;
     }
 
-    if (!this.target.active || this.target.isDestroyed()) {
+    if (!this.target.active || this.target.isDefeated()) {
       this.destroy();
       return;
     }
